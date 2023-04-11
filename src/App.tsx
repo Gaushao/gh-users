@@ -1,10 +1,10 @@
 import UsersContext from "./ui/users/Context";
-import Router from "./router/Provider";
+import { PagesRouter } from "./router";
 
 export default function App() {
   return (
     <UsersContext>
-      <Router />
+      <PagesRouter />
     </UsersContext>
   );
 }

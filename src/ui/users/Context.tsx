@@ -9,19 +9,20 @@ import {
 } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import { UsersResponse } from "../../http/types";
-import { useFetchUsersEffect } from "../../http/hooks";
+import { UsersResponse } from "../../api/types";
+import { useFetchUsersEffect } from "../../api/hooks";
 import EMPTY from "../../utils/empty";
 import { RouterHooks } from "../../router";
 
 class UsersContextValue {
   data: UsersResponse | null = null;
   loading = false;
-  user = "";
+  error: Error | null = null;
+  query = "";
   users: UsersResponse["items"] = EMPTY.arr;
-  setUser: React.Dispatch<React.SetStateAction<string>> = EMPTY.noop;
+  setQuery: React.Dispatch<React.SetStateAction<string>> = EMPTY.noop;
   clear = EMPTY.noop;
-  reset = EMPTY.noop;
+  uncatch = EMPTY.noop;
 }
 
 const USERS_VALUE = new UsersContextValue();
@@ -29,50 +30,55 @@ const USERS_VALUE = new UsersContextValue();
 const Context = createContext(USERS_VALUE);
 
 export default function UsersContext({ children }: PropsWithChildren) {
-  const [user, setUser] = useState(USERS_VALUE.user);
-  const { data, loading, clear } = useFetchUsersEffect(user);
-  const reset = useCallback(() => {
-    clear();
-    setUser(USERS_VALUE.user);
-  }, [clear, setUser]);
+  const [query, setQuery] = useState(USERS_VALUE.query);
+  const { data, loading, error, reset, uncatch } = useFetchUsersEffect(query);
+  const clear = useCallback(() => {
+    reset();
+    setQuery(USERS_VALUE.query);
+  }, [reset, setQuery]);
   const value = useMemo(
     () => ({
       data,
       loading,
+      error,
       clear,
-      reset,
-      user,
-      setUser,
+      query,
+      setQuery,
+      uncatch,
       users: data?.items || EMPTY.arr,
     }),
-    [data, loading, clear, reset, user]
+    [data, loading, error, clear, query, uncatch]
   );
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
+UsersContext.Provider = Context.Provider;
+UsersContext.Value = UsersContextValue;
 UsersContext.useContext = () => useContext(Context);
-UsersContext.useUser = () => {
-  const { user, setUser } = UsersContext.useContext();
+UsersContext.useUserState = () => {
+  const { query, setQuery, loading } = UsersContext.useContext();
   const { state } = useLocation();
   useEffect(() => {
-    const { name } = state || {};
-    if (name) setUser(name);
+    const { query } = state || {};
+    if (query) setQuery(query);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
-  return { user, setUser };
+  return { query, setQuery, loading };
 };
 UsersContext.useUserByParam = () => {
-  const { name } = useParams();
-  const { data, setUser, loading } = UsersContext.useContext();
+  const { login } = useParams();
+  const { data, query, setQuery, loading } = UsersContext.useContext();
   const matches = useMemo(
-    () => data?.items.filter((u) => u.login === name),
-    [data?.items, name]
+    () => data?.items.filter((u) => u.login === login),
+    [data?.items, login]
   );
-  const redirect = RouterHooks.useNavToUsers(name);
+  const redirect = RouterHooks.useNavToHome(login);
   useEffect(() => {
+    if (!login) return redirect();
     if (loading) return;
-    if (name && !matches) return setUser(name);
-    if ((matches && matches?.length > 1) || !matches?.length) return redirect();
-  }, [redirect, loading, matches, name, setUser]);
+    if (login !== query) return setQuery(login);
+    if (!query) return;
+    if (matches && matches?.length !== 1) redirect();
+  }, [loading, login, matches, query, redirect, setQuery]);
   return matches ? matches[0] : undefined;
 };

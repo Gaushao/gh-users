@@ -1,18 +1,16 @@
 import { useMemo } from "react";
-import TRANSLATIONS from "./translations";
-import { TranslationKey, TranslationLocale } from "./types";
+import TRANSLATIONS, { TranslationKey } from "./translations";
+import Locale from "./locale";
 
 const DEFAULT = TRANSLATIONS["en-US"];
 
-export function useTranslations() {
+export function useTranslation() {
   const { language } = navigator;
-  return useMemo(
-    () => TRANSLATIONS[language as TranslationLocale] || DEFAULT,
-    [language]
-  );
+  return useMemo(() => TRANSLATIONS[language as Locale] || DEFAULT, [language]);
 }
 
 export function useTranslate(key?: TranslationKey) {
-  const translations = useTranslations();
-  return useMemo(() => (key && translations[key]) || key, [key, translations]);
+  const translation = useTranslation();
+  return useMemo(() => (key && translation[key]) || key, [key, translation]);
 }
+useTranslate.key = "" as TranslationKey;

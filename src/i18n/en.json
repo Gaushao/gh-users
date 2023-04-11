@@ -1,6 +1,9 @@
 {
-  "usernameInputPlaceholder": "search for github user by it's name",
+  "usernameInputPlaceholder": "type to search github users",
+  "noResults": "no results",
   "viewAtGithub": "view at Github",
   "applicationDisplayName": "github users",
-  "search": "search for users"
+  "search": "search for users",
+  "readMore": "read more",
+  "cause": "cause"
 }

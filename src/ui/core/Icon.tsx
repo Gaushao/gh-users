@@ -1,7 +1,5 @@
 import { SVGProps } from "react";
-import ASSETS from "../../assets";
-
-const { SVG } = ASSETS;
+import { SVG } from "../../assets";
 
 export default function Icon({
   name,

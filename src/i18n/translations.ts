@@ -1,11 +1,12 @@
 import en from "./en.json";
+import Locale from "./locale";
 import pt from "./pt.json";
 
 const TRANSLATIONS = {
-  "pt-BR": pt,
-  "pt-PT": pt,
-  "en-US": en,
-  "en-EN": en,
+  [Locale.enUS]: en,
+  [Locale.ptBR]: pt,
 };
+
+export type TranslationKey = keyof typeof TRANSLATIONS[Locale];
 
 export default TRANSLATIONS;

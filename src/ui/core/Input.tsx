@@ -2,16 +2,6 @@ import { useCallback } from "react";
 
 type OnChange = (v: string) => void;
 
-function useOnChange(onChangeValue?: OnChange) {
-  return useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
-      const { value } = e.target;
-      if (onChangeValue) onChangeValue(value);
-    },
-    [onChangeValue]
-  );
-}
-
 interface InputProps
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -21,13 +11,19 @@ interface InputProps
 }
 
 export default function Input({ onChangeValue, ...props }: InputProps) {
+  const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      if (onChangeValue) onChangeValue(value);
+    },
+    [onChangeValue]
+  );
   return (
     <input
       className="p-1 rounded-md bg-slate-200"
-      onChange={useOnChange(onChangeValue)}
+      onChange={onChange}
       {...props}
     />
   );
 }
-
-Input.Props = class Props implements InputProps {};
+Input.onChangeValue = (s: string) => {};

@@ -3,6 +3,9 @@ import Text from "./core/Text";
 import Icon from "./core/Icon";
 import { RouterHooks } from "../router";
 
+const applicationDisplayName: "applicationDisplayName" =
+  "applicationDisplayName";
+
 function PageHeader() {
   const nav = RouterHooks.useNavToHome();
   const isHome = RouterHooks.useIsHomeRoute();
@@ -15,24 +18,23 @@ function PageHeader() {
         } cursor-pointer`}
       >
         <Icon
-          name={isHome ? "GithubRounded" : "Cancel"}
+          name={isHome ? "GithubRounded" : "CancelIcon"}
           width={48}
           height={48}
         />
       </div>
       <div className="m-2" />
-      <Text i18n="applicationDisplayName" className="text-2xl" />
+      <Text i18n={applicationDisplayName} className="text-2xl" />
     </div>
   );
 }
-function PageContent({ children }: PropsWithChildren) {
-  return <div className="m-1">{children}</div>;
-}
+
 export default function Page({ children }: PropsWithChildren) {
   return (
     <div className="m-1">
       <PageHeader />
-      <PageContent>{children}</PageContent>
+      <div className="m-1">{children}</div>
     </div>
   );
 }
+Page.applicationDisplayName = applicationDisplayName;

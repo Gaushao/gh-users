@@ -1,19 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { NavigateOptions, useLocation, useNavigate } from "react-router-dom";
-import Routes from "./routes";
-
-function getRoute(path: string, ...a: string[]) {
-  let args = Array.prototype.slice.call(arguments, 1);
-  let count = -1;
-  return path.replace(/:[a-zA-Z?]+/g, function (match) {
-    count += 1;
-    return args[count] !== undefined ? args[count] : match;
-  });
-}
+import Path from "./path";
+import { routing } from "./utils";
 
 export default class RouterHooks {
   static get useNav() {
-    return (route: Routes, options?: NavigateOptions) => {
+    return (route: Path, options?: NavigateOptions) => {
       const navigate = useNavigate();
       return useCallback(() => {
         navigate(route, options);
@@ -21,13 +13,8 @@ export default class RouterHooks {
     };
   }
   static get useNavToHome() {
-    return () => {
-      return RouterHooks.useNav(Routes.HOME);
-    };
-  }
-  static get useNavToUsers() {
-    return (name?: string) => {
-      return RouterHooks.useNav(Routes.HOME, { state: { name } });
+    return (query?: string) => {
+      return RouterHooks.useNav(Path.HOME, { state: { query } });
     };
   }
   static get useNavToUser() {
@@ -35,7 +22,7 @@ export default class RouterHooks {
       const navigate = useNavigate();
       return useCallback(
         (user: string) => {
-          navigate(getRoute(Routes.USER, user));
+          navigate(routing(Path.USER, user));
         },
         [navigate]
       );
@@ -44,7 +31,7 @@ export default class RouterHooks {
   static get useIsHomeRoute() {
     return () => {
       const { pathname } = useLocation();
-      return useMemo(() => pathname === Routes.HOME, [pathname]);
+      return useMemo(() => pathname === Path.HOME, [pathname]);
     };
   }
 }
