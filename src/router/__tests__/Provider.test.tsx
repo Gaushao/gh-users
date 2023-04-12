@@ -2,11 +2,11 @@ import {
   RouteObject,
   RouterProvider,
   createMemoryRouter,
+  generatePath,
   useLocation,
 } from "react-router-dom";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import UsersContext from "../../ui/users/Context";
-import { routing } from "../utils";
 import ROUTES from "../routes";
 import Path from "../path";
 
@@ -38,8 +38,8 @@ test("router 404 redirect", async () => {
 test("router user search", async () => {
   const user = "Gaushao";
   const baduser = user.repeat(88);
-  const userroute = routing(Path.USER, user);
-  const baduserroute = routing(Path.USER, baduser);
+  const userroute = generatePath(Path.USER, { login: user });
+  const baduserroute = generatePath(Path.USER, { login: baduser });
   const router = createMemoryRouter(ROUTES, {});
   render(
     <UsersContext>

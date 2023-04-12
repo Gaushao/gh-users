@@ -1,37 +1,64 @@
-import { useCallback, useMemo } from "react";
-import { NavigateOptions, useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+import { generatePath, useLocation, useNavigate } from "react-router-dom";
 import Path from "./path";
-import { routing } from "./utils";
 
 export default class RouterHooks {
-  static get useNav() {
-    return (route: Path, options?: NavigateOptions) => {
-      const navigate = useNavigate();
-      return useCallback(() => {
-        navigate(route, options);
-      }, [navigate, route, options]);
-    };
-  }
   static get useNavToHome() {
     return (query?: string) => {
-      return RouterHooks.useNav(Path.HOME, { state: { query } });
+      const nav = useNavigate();
+      return useCallback(
+        () => nav(Path.HOME, { state: { query } }),
+        [nav, query]
+      );
     };
   }
   static get useNavToUser() {
     return () => {
       const navigate = useNavigate();
       return useCallback(
-        (user: string) => {
-          navigate(routing(Path.USER, user));
+        (login: string) => {
+          navigate(generatePath(Path.USER, { login }));
         },
         [navigate]
       );
     };
   }
-  static get useIsHomeRoute() {
+  static get useHashRouter() {
     return () => {
-      const { pathname } = useLocation();
-      return useMemo(() => pathname === Path.HOME, [pathname]);
+      const { pathname: path } = useLocation();
+      const isHome = path === Path.HOME;
+      const {
+        location: { hash, pathname, href },
+      } = window;
+      const params = new URL(href).searchParams.get("pathname");
+      const willHash =
+        isHome && ((!hash.length && path !== pathname) || params);
+      return {
+        isHome,
+        willHash,
+        pathname,
+        params,
+      };
+    };
+  }
+  static get useUnhashEffect() {
+    // avoids hashing pathname
+    return () => {
+      const { willHash, pathname, params } = this.useHashRouter();
+      const nav = useNavigate();
+      const navToUser = this.useNavToUser();
+      const unhash = useCallback(() => {
+        window.history.replaceState(null, "", Path.HOME);
+        window.history.replaceState(null, "", "/gh-users/");
+        if (params) {
+          navToUser(params.substring(params.lastIndexOf("/") + 1));
+        } else {
+          nav(params || pathname);
+        }
+      }, [nav, navToUser, params, pathname]);
+      useEffect(() => {
+        willHash && unhash();
+      }, [willHash, unhash]);
     };
   }
 }

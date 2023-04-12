@@ -1,4 +1,4 @@
-import UsersPage from "../pages/Users";
+import HomePage from "../pages/Home";
 import UserPage from "../pages/User";
 import RedirectPage from "../pages/Redirect";
 import Path from "./path";
@@ -10,7 +10,7 @@ const ROUTES = [
   },
   {
     path: Path.HOME,
-    Component: UsersPage,
+    Component: HomePage,
   },
   {
     path: Path.USER,
