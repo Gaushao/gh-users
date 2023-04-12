@@ -5,6 +5,8 @@ import { RouterHooks } from "../router";
 
 const GIT_URL = "https://github.com/Gaushao/gh-users";
 const JEST_URL = "https://gaushao.github.io/gh-users/coverage";
+const DOCS_URL = "https://gaushao.github.io/gh-users/docs";
+
 const applicationDisplayName: "applicationDisplayName" =
   "applicationDisplayName";
 
@@ -46,6 +48,21 @@ function PageHeader() {
         </a>
         <div className="m-1" />
         <a
+          className="rounded-md border-2 border-black bg-white hover:invert"
+          href={DOCS_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon
+            name="DocsIcon"
+            className="p-1"
+            width={32}
+            height={32}
+            fill="black"
+          />
+        </a>
+        <div className="m-1" />
+        <a
           className="rounded-full border-2 border-black bg-black hover:invert"
           href={GIT_URL}
           target="_blank"
@@ -58,6 +75,9 @@ function PageHeader() {
   );
 }
 
+/**
+ * @param props
+ */
 export default function Page({ children }: PropsWithChildren) {
   RouterHooks.useUnhashEffect();
   return (
@@ -67,4 +87,5 @@ export default function Page({ children }: PropsWithChildren) {
     </div>
   );
 }
+Page.Header = PageHeader;
 Page.applicationDisplayName = applicationDisplayName;

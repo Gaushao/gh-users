@@ -15,9 +15,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "eject": "react-scripts eject",
     "test": "react-scripts test",
     "cover": "react-scripts test --watchAll --coverage",
-    "eject": "react-scripts eject",
+    "docs": "typedoc",
     "deploy": "./deploy.sh"
   },
   "eslintConfig": {
@@ -49,6 +50,8 @@
     "autoprefixer": "^10.4.14",
     "gh-pages": "^5.0.0",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.1"
+    "tailwindcss": "^3.3.1",
+    "typedoc": "^0.24.1",
+    "typedoc-plugin-rename-defaults": "^0.6.5"
   }
 }

@@ -6,6 +6,9 @@ function userId(index: number) {
   return `user-${index}`;
 }
 
+/**
+ * @param props
+ */
 export default function SearchMock({ login }: { login?: string }) {
   const { query, users, setQuery, loading } = UsersContext.useContext();
   return (
