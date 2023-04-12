@@ -1,9 +1,16 @@
 import { useMemo } from "react";
 
+/**
+ * @param props
+ */
 export default function Spinner({
   size = 32,
   stroke = "black",
   fill = "transparent",
+}: {
+  size?: number | undefined;
+  stroke?: string | undefined;
+  fill?: string | undefined;
 }) {
   const circ = useMemo(() => Math.floor(2 * Math.PI * size), [size]);
   return (

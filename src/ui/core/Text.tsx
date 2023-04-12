@@ -1,6 +1,9 @@
 import { PropsWithChildren } from "react";
 import { useTranslate } from "../../i18n/hooks";
 
+/**
+ * @param props
+ */
 export default function Text({
   children,
   i18n,

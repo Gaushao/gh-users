@@ -1,0 +1,8 @@
+{
+  "name": "GH Users",
+  "entryPoints": ["src/assets", "src/i18n", "src/pages", "src/router", "src/api", "src/ui"],
+  "entryPointStrategy": "expand",
+  "categoryOrder": ["*", "Other"],
+  "out": "build/docs",
+  "plugin": ["typedoc-plugin-rename-defaults"]
+}

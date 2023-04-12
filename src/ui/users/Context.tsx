@@ -14,7 +14,7 @@ import { useFetchUsersEffect } from "../../api/hooks";
 import EMPTY from "../../utils/empty";
 import { RouterHooks } from "../../router";
 
-class UsersContextValue {
+export class UsersContextValue {
   data: UsersResponse | null = null;
   loading = false;
   error: Error | null = null;
@@ -29,6 +29,9 @@ const USERS_VALUE = new UsersContextValue();
 
 const Context = createContext(USERS_VALUE);
 
+/**
+ * @param props
+ */
 export default function UsersContext({ children }: PropsWithChildren) {
   const [query, setQuery] = useState(USERS_VALUE.query);
   const { data, loading, error, reset, uncatch } = useFetchUsersEffect(query);
@@ -52,8 +55,6 @@ export default function UsersContext({ children }: PropsWithChildren) {
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
-UsersContext.Provider = Context.Provider;
-UsersContext.Value = UsersContextValue;
 UsersContext.useContext = () => useContext(Context);
 UsersContext.useUserState = () => {
   const { query, setQuery, loading } = UsersContext.useContext();

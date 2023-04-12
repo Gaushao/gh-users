@@ -1,16 +1,17 @@
 import { useCallback } from "react";
 
-type OnChange = (v: string) => void;
-
-interface InputProps
+export interface CoreInputProps
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  onChangeValue?: OnChange;
+  onChangeValue?: (v: string) => void;
 }
 
-export default function Input({ onChangeValue, ...props }: InputProps) {
+/**
+ * @param props
+ */
+export default function Input({ onChangeValue, ...props }: CoreInputProps) {
   const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
