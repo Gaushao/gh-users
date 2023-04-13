@@ -64,6 +64,7 @@
 <li><a href="https://jestjs.io/">Jest</a> - framework for unit tests</li>
 <li><a href="https://typedoc.org/">TypeDoc</a> - documentation generator</li>
 <li><a href="https://pages.github.com/">GitHub Pages</a> - for deploying</li>
+<li><a href="https://docs.github.com/en/rest">GitHub REST</a> - fetching users</li>
 </ul>
 <br />
 
@@ -86,10 +87,22 @@
 </ul>
 <a id="$page-header" class="tsd-anchor"></a><h3><a href="#$page-header" style="color:inherit;text-decoration:none">Page Header</a></h3><p>render of page logo and application name. also links to <a href="https://gaushao.github.io/gh-users/docs">Docs</a>, <a href="https://gaushao.github.io/gh-users/coverage/">Jest</a>, <a href="https://github.com/Gaushao/gh-users">Git</a></p>
 <a id="$page-logo" class="tsd-anchor"></a><h3><a href="#$page-logo" style="color:inherit;text-decoration:none">Page Logo</a></h3><p>will change to <code>CancelIcon</code> if browser location lands in user details and navigate to home <code>onClick</code></p>
+<a id="$search-errors" class="tsd-anchor"></a><h3><a href="#$search-errors" style="color:inherit;text-decoration:none">Search Errors</a></h3><p>feedback for errors like <a href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api?apiVersion=2022-11-28#exceeding-the-rate-limit">exceeding the rate limit</a> will be displayed below the search user input with a link to its <code>documentation_url</code></p>
 <a id="$page-redirect" class="tsd-anchor"></a><h3><a href="#$page-redirect" style="color:inherit;text-decoration:none">Page Redirect</a></h3><p>any missing pathname after <code>https://gaushao.github.io/gh-users</code> will be handle by <a href="https://github.com/Gaushao/gh-users/blob/main/public/404.html">404.html</a> and redirected as search query to application home page</p>
-<a id="$search-query" class="tsd-anchor"></a><h3><a href="#$search-query" style="color:inherit;text-decoration:none">Search Query</a></h3><p>on <a href="https://gaushao.github.io/gh-users/reallybadroute">badroute</a> landing query is loaded by the <a href="https://gaushao.github.io/gh-users/docs/modules/ui_users_Context.html">Context</a> as <a href="https://gaushao.github.io/gh-users/docs/classes/ui_users_Context.UsersContextValue.html#query">query</a> causing the search for users effect to occurs, case only a single result is returned there will be redirected directly to the user details</p>
+<a id="$search-query" class="tsd-anchor"></a><h3><a href="#$search-query" style="color:inherit;text-decoration:none">Search Query</a></h3><p>on <a href="https://gaushao.github.io/gh-users/reallybadroute">badroute</a> landing query is loaded by the <a href="https://gaushao.github.io/gh-users/docs/modules/ui_users_Context.html">UsersContext</a> as <a href="https://gaushao.github.io/gh-users/docs/classes/ui_users_Context.UsersContextValue.html#query">query</a> causing to trigger <a href="https://gaushao.github.io/gh-users/docs/functions/api_hooks.useFetchUsersEffect.html">useFetchUsersEffect</a>, case only a single result is returned, there will redirect to the user details page</p>
 <a id="$search-routing" class="tsd-anchor"></a><h3><a href="#$search-routing" style="color:inherit;text-decoration:none">Search Routing</a></h3><p><a href="https://github.com/rafgraph/spa-github-pages">GitHub Pages doesn&#39;t natively support single page apps</a>, so GH Users is routed with <a href="https://reactrouter.com/en/main/router-components/hash-router">HashRouter</a> which enables routing single-page applications on servers like GitHub Pages.</p>
 <p>this implementation allows not only the page to be refreshed but users to be searched by URL pathname, like <a href="https://gaushao.github.io/gh-users/Gaushao">Gaushao</a>.</p>
+<a id="$folders" class="tsd-anchor"></a><h2><a href="#$folders" style="color:inherit;text-decoration:none">Folders</a></h2><pre><code><span class="hl-2">src</span><br/><span class="hl-0">├── </span><span class="hl-2">api</span><br/><span class="hl-0">├── </span><span class="hl-2">assets</span><br/><span class="hl-0">├── </span><span class="hl-2">i18n</span><br/><span class="hl-0">├── </span><span class="hl-2">pages</span><br/><span class="hl-0">├── </span><span class="hl-2">router</span><br/><span class="hl-0">└── </span><span class="hl-2">ui</span><br/><span class="hl-0">    ├── </span><span class="hl-2">core</span><br/><span class="hl-0">    └── </span><span class="hl-2">users</span>
+</code></pre>
+<ul>
+<li><code>src/api</code>: contains modules for interacting with the GitHub API, such as <a href="https://gaushao.github.io/gh-users/docs/functions/api_hooks.useFetchUsersEffect.html">useFetchUsersEffect</a> which fetches user data using the <a href="https://docs.github.com/en/rest/search?apiVersion=2022-11-28#search-users">Github Search Users API</a>.</li>
+<li><code>src/assets</code>: contains static files used in the project, such as images and icons.</li>
+<li><code>src/i18n</code>: contains the internationalization source files and logic, allowing the application to switch between languages.</li>
+<li><code>src/pages</code>: contains top-level components where each file represent a application routed page</li>
+<li><code>src/router</code>: contains the routing configuration for the application, including the <a href="https://reactrouter.com/en/main/router-components/hash-router">HashRouter</a> used to enable routing on servers like GitHub Pages.</li>
+<li><code>src/ui/core</code>: contains the most generic UI components used throughout the application</li>
+<li><code>src/ui/users</code>: contains UI components specific to the GitHub users feature</li>
+</ul>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -138,9 +151,11 @@
 <li><a href="#$user-details"><span>User <wbr/>Details</span></a></li>
 <li><a href="#$page-header"><span>Page <wbr/>Header</span></a></li>
 <li><a href="#$page-logo"><span>Page <wbr/>Logo</span></a></li>
+<li><a href="#$search-errors"><span>Search <wbr/>Errors</span></a></li>
 <li><a href="#$page-redirect"><span>Page <wbr/>Redirect</span></a></li>
 <li><a href="#$search-query"><span>Search <wbr/>Query</span></a></li>
-<li><a href="#$search-routing"><span>Search <wbr/>Routing</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#$search-routing"><span>Search <wbr/>Routing</span></a></li></ul></li>
+<li><a href="#$folders"><span>Folders</span></a></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>GH <wbr/>Users</span></a>
 <ul class="tsd-small-nested-navigation">
