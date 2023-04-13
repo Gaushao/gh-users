@@ -1,3 +1,4 @@
+import "../../../utils/mocks/react-router-dom";
 import { render, screen } from "@testing-library/react";
 import SearchMock from "../mocks/Search";
 import Details from "../Details";

@@ -1,9 +1,26 @@
 import UsersContext from "./Context";
 import Text from "../core/Text";
 import Icon from "../core/Icon";
+import { RouterHooks } from "../../router";
+import { useEffect } from "react";
 
 export default function UserDetails() {
-  const user = UsersContext.useUserByParam();
+  const {
+    user: [user],
+    users,
+  } = UsersContext.useContext();
+  const nav = RouterHooks.useNavToHome();
+  const { query: q } = RouterHooks.useHashRouter();
+  useEffect(() => {
+    const timers: NodeJS.Timeout[] = [];
+    if (user === null) {
+      if (!users.length && q)
+        timers.push(setTimeout(() => nav({ state: { query: q } }), 250));
+      else timers.push(setTimeout(nav, 250));
+    }
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   if (!user) return null;
   return (
     <div className="flex">

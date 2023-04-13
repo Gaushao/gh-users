@@ -7,9 +7,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { UsersResponse } from "../../api/types";
+import { UsersItemResponse, UsersResponse } from "../../api/types";
 import { useFetchUsersEffect } from "../../api/hooks";
 import EMPTY from "../../utils/empty";
 import { RouterHooks } from "../../router";
@@ -19,6 +19,10 @@ export class UsersContextValue {
   loading = false;
   error: Error | null = null;
   query = "";
+  user: [
+    UsersItemResponse | null,
+    React.Dispatch<React.SetStateAction<UsersItemResponse | null>>
+  ] = [null, EMPTY.noop];
   users: UsersResponse["items"] = EMPTY.arr;
   setQuery: React.Dispatch<React.SetStateAction<string>> = EMPTY.noop;
   clear = EMPTY.noop;
@@ -33,6 +37,7 @@ const Context = createContext(USERS_VALUE);
  * @param props
  */
 export default function UsersContext({ children }: PropsWithChildren) {
+  const user = useState(USERS_VALUE.user[0]);
   const [query, setQuery] = useState(USERS_VALUE.query);
   const { data, loading, error, reset, uncatch } = useFetchUsersEffect(query);
   const clear = useCallback(() => {
@@ -48,38 +53,33 @@ export default function UsersContext({ children }: PropsWithChildren) {
       query,
       setQuery,
       uncatch,
+      user,
       users: data?.items || EMPTY.arr,
     }),
-    [data, loading, error, clear, query, uncatch]
+    [data, loading, error, clear, query, uncatch, user]
   );
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
 UsersContext.useContext = () => useContext(Context);
-UsersContext.useUserState = () => {
-  const { query, setQuery, loading } = UsersContext.useContext();
+UsersContext.useUsersRouting = () => {
+  const {
+    users,
+    user: [user, setUser],
+    query,
+    setQuery,
+  } = UsersContext.useContext();
   const { state } = useLocation();
+  const nav = RouterHooks.useNavToHome();
   useEffect(() => {
-    const { query } = state || {};
-    if (query) setQuery(query);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
-  return { query, setQuery, loading };
-};
-UsersContext.useUserByParam = () => {
-  const { login } = useParams();
-  const { data, query, setQuery, loading } = UsersContext.useContext();
-  const matches = useMemo(
-    () => data?.items.filter((u) => u.login === login),
-    [data?.items, login]
-  );
-  const redirect = RouterHooks.useNavToHome(login);
-  useEffect(() => {
-    if (!login) return redirect();
-    if (loading) return;
-    if (login !== query) return setQuery(login);
-    if (!query) return;
-    if (matches && matches?.length !== 1) redirect();
-  }, [loading, login, matches, query, redirect, setQuery]);
-  return matches ? matches[0] : undefined;
+    if (state) {
+      const { query: q } = state;
+      if (query.length) {
+        nav({ state: null });
+      } else if (q) {
+        setQuery(q);
+      }
+      if (users.length === 1) setUser(users[0]);
+    }
+  }, [nav, query, setQuery, setUser, state, user, users]);
 };

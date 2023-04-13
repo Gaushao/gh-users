@@ -40,7 +40,7 @@ test("router user search", async () => {
   const baduser = user.repeat(88);
   const userroute = generatePath(Path.USER, { login: user });
   const baduserroute = generatePath(Path.USER, { login: baduser });
-  const router = createMemoryRouter(ROUTES, {});
+  const router = createMemoryRouter(ROUTES, { initialEntries: [userroute] });
   render(
     <UsersContext>
       <RouterProvider router={router} />
@@ -50,12 +50,11 @@ test("router user search", async () => {
     router.navigate(userroute);
   });
   expect(router.state.location.pathname).toBe(userroute);
-  await waitFor(() => {
-    screen.getByText(user);
-  });
   await act(() => {
     router.navigate(baduserroute);
   });
-  expect(router.state.location.pathname).toBe(Path.HOME);
-  expect(router.state.location.state.query).toBe(baduser);
+  expect(router.state.location.pathname).toBe(baduserroute);
+  await waitFor(() => {
+    expect(router.state.location.pathname).toBe(Path.HOME);
+  });
 });

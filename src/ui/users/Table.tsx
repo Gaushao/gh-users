@@ -2,7 +2,7 @@ import UsersContext from "./Context";
 import { UsersItemResponse } from "../../api/types";
 import { RouterHooks } from "../../router";
 import Text from "../core/Text";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function Item(user: UsersItemResponse) {
   return (
@@ -42,6 +42,7 @@ function TableError({
   error: Error | null;
   uncatch: () => void;
 }) {
+  // error timeout
   useEffect(() => {
     if (!error) return;
     const timer = setTimeout(uncatch, 5000);
@@ -72,8 +73,36 @@ function TableError({
 }
 
 export default function UsersTable() {
-  const { users, loading, error, uncatch } = UsersContext.useContext();
+  const {
+    users,
+    loading,
+    error,
+    uncatch,
+    user: [user, setUser],
+    query,
+  } = UsersContext.useContext();
   const nav = RouterHooks.useNavToUser();
+  // navigate to user details
+  useEffect(() => {
+    if (user) nav(user.login);
+  }, [nav, user]);
+
+  // auto selection
+  const l = useRef(false);
+  const q = useRef(query);
+  useEffect(() => {
+    if (loading !== l.current) {
+      l.current = loading;
+      if (users.length === 1) {
+        if (!q.current.length) {
+          setUser(users[0]);
+          q.current = query;
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
   if (!users.length && !loading && !error)
     return (
       <div>
@@ -97,7 +126,7 @@ export default function UsersTable() {
               <tr
                 key={u.login}
                 className="cursor-pointer hover:bg-emerald-100"
-                onClick={() => nav(u.login)}
+                onClick={() => setUser(u)}
               >
                 <Item {...u} />
               </tr>
