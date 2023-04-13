@@ -84,6 +84,7 @@ $ yarn deploy
 - [Jest](https://jestjs.io/) - framework for unit tests
 - [TypeDoc](https://typedoc.org/) - documentation generator
 - [GitHub Pages](https://pages.github.com/) - for deploying
+- [GitHub REST](https://docs.github.com/en/rest) - fetching users
 
 <br />
 
@@ -126,16 +127,42 @@ render of page logo and application name. also links to [Docs](https://gaushao.g
 
 will change to `CancelIcon` if browser location lands in user details and navigate to home `onClick`
 
+### Search Errors
+
+feedback for errors like [exceeding the rate limit](https://docs.github.com/en/rest/overview/resources-in-the-rest-api?apiVersion=2022-11-28#exceeding-the-rate-limit) will be displayed below the search user input with a link to its `documentation_url`
+
 ### Page Redirect
 
 any missing pathname after `https://gaushao.github.io/gh-users` will be handle by [404.html](https://github.com/Gaushao/gh-users/blob/main/public/404.html) and redirected as search query to application home page
 
 ### Search Query
 
-on [badroute](https://gaushao.github.io/gh-users/reallybadroute) landing query is loaded by the [Context](https://gaushao.github.io/gh-users/docs/modules/ui_users_Context.html) as [query](https://gaushao.github.io/gh-users/docs/classes/ui_users_Context.UsersContextValue.html#query) causing the search for users effect to occurs, case only a single result is returned there will be redirected directly to the user details
+on [badroute](https://gaushao.github.io/gh-users/reallybadroute) landing query is loaded by the [UsersContext](https://gaushao.github.io/gh-users/docs/modules/ui_users_Context.html) as [query](https://gaushao.github.io/gh-users/docs/classes/ui_users_Context.UsersContextValue.html#query) causing to trigger [useFetchUsersEffect](https://gaushao.github.io/gh-users/docs/functions/api_hooks.useFetchUsersEffect.html), case only a single result is returned, there will redirect to the user details page
 
 ### Search Routing
 
 [GitHub Pages doesn't natively support single page apps](https://github.com/rafgraph/spa-github-pages), so GH Users is routed with [HashRouter](https://reactrouter.com/en/main/router-components/hash-router) which enables routing single-page applications on servers like GitHub Pages.
 
 this implementation allows not only the page to be refreshed but users to be searched by URL pathname, like [Gaushao](https://gaushao.github.io/gh-users/Gaushao).
+
+## Folders
+
+```
+src
+├── api
+├── assets
+├── i18n
+├── pages
+├── router
+└── ui
+    ├── core
+    └── users
+```
+
+- `src/api`: contains modules for interacting with the GitHub API, such as [useFetchUsersEffect](https://gaushao.github.io/gh-users/docs/functions/api_hooks.useFetchUsersEffect.html) which fetches user data using the [Github Search Users API](https://docs.github.com/en/rest/search?apiVersion=2022-11-28#search-users).
+- `src/assets`: contains static files used in the project, such as images and icons.
+- `src/i18n`: contains the internationalization source files and logic, allowing the application to switch between languages.
+- `src/pages`: contains top-level components where each file represent a application routed page
+- `src/router`: contains the routing configuration for the application, including the [HashRouter](https://reactrouter.com/en/main/router-components/hash-router) used to enable routing on servers like GitHub Pages.
+- `src/ui/core`: contains the most generic UI components used throughout the application
+- `src/ui/users`: contains UI components specific to the GitHub users feature
