@@ -11,6 +11,7 @@ function userId(index: number) {
  */
 export default function SearchMock({ login }: { login?: string }) {
   const { query, users, setQuery, loading } = UsersContext.useContext();
+  UsersContext.useUsersRouting();
   return (
     <div>
       <div data-testid="search" onClick={() => login && setQuery(login)} />

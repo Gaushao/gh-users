@@ -1,3 +1,4 @@
+import "../../../utils/mocks/react-router-dom";
 import SearchMock from "../mocks/Search";
 
 test("users context max length on search", async () => {

@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { locationMock } from "../../../utils/mocks/react-router-dom";
 import { mockTranslate } from "../../../utils/mocks/hooks";
 import Context from "../Context";
 import Input from "../Input";
+import { useEffect } from "react";
 
 function getInput() {
   return screen.findByPlaceholderText<HTMLInputElement>(
@@ -16,14 +16,22 @@ test("user input without context", async () => {
   expect((await getInput()).value).toBe("");
 });
 
+function Query({ query = "" }) {
+  const ctx = Context.useContext();
+  useEffect(() => ctx.setQuery(query));
+  return null;
+}
+
 test("user input location state query", async () => {
+  const query = "João";
   render(
     <Context>
       <Input />
+      <Query query={query} />
     </Context>
   );
   const input = await getInput();
-  expect(input.value).toBe(locationMock.state.query);
+  expect(input.value).toBe(query);
 });
 
 function Value() {
