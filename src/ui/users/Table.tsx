@@ -42,6 +42,7 @@ function TableError({
   error: Error | null;
   uncatch: () => void;
 }) {
+  // error timeout
   useEffect(() => {
     if (!error) return;
     const timer = setTimeout(uncatch, 5000);
@@ -81,17 +82,19 @@ export default function UsersTable() {
     query,
   } = UsersContext.useContext();
   const nav = RouterHooks.useNavToUser();
+  // navigate to user details
   useEffect(() => {
     if (user) nav(user.login);
   }, [nav, user]);
 
+  // auto selection
   const l = useRef(false);
   const q = useRef(query);
   useEffect(() => {
     if (loading !== l.current) {
       l.current = loading;
       if (users.length === 1) {
-        if (!q.current.includes(query)) {
+        if (!q.current.length) {
           setUser(users[0]);
           q.current = query;
         }

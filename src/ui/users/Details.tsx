@@ -7,11 +7,20 @@ import { useEffect } from "react";
 export default function UserDetails() {
   const {
     user: [user],
+    users,
   } = UsersContext.useContext();
   const nav = RouterHooks.useNavToHome();
+  const { query: q } = RouterHooks.useHashRouter();
   useEffect(() => {
-    if (!user) nav();
-  }, [nav, user]);
+    const timers: NodeJS.Timeout[] = [];
+    if (user === null) {
+      if (!users.length && q)
+        timers.push(setTimeout(() => nav({ state: { query: q } }), 250));
+      else timers.push(setTimeout(nav, 250));
+    }
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
   if (!user) return null;
   return (
     <div className="flex">

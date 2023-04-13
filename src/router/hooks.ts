@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import Path from "./path";
 
+const q = (s: string) => s.substring(s.lastIndexOf("/") + 1);
+
 export default class RouterHooks {
   static get useNavToHome() {
     return () => {
@@ -32,6 +34,7 @@ export default class RouterHooks {
       const {
         location: { hash, pathname, href },
       } = window;
+      const query = href.includes("/gh-users/#/user/") ? q(href) : null;
       const params = new URL(href).searchParams.get("pathname");
       const willHash =
         isHome && ((!hash.length && path !== pathname) || params);
@@ -40,26 +43,30 @@ export default class RouterHooks {
         willHash,
         pathname,
         params,
+        query,
       };
     };
   }
   static get useUnhashEffect() {
     // avoids hashing pathname
     return () => {
-      const { willHash, pathname, params } = this.useHashRouter();
+      const { willHash, pathname, params, query } = this.useHashRouter();
       const nav = useNavigate();
-      // const navToUser = this.useNavToUser();
-      const unhash = useCallback(() => {
-        window.history.replaceState(null, "", Path.HOME);
-        window.history.replaceState(null, "", "/gh-users/");
-        console.log(pathname, "pathname");
-        console.log(params, "params");
-        const query = (s: string) => s.substring(s.lastIndexOf("/") + 1);
-        nav(Path.HOME, { state: { query: query(params || pathname) } });
-      }, [nav, params, pathname]);
+      const navUser = this.useNavToUser();
+      const unhash = useCallback(
+        (str: string) => {
+          window.history.replaceState(null, "", "/gh-users/");
+          nav(Path.HOME, { state: { query: q(str) } });
+        },
+        [nav]
+      );
       useEffect(() => {
-        willHash && unhash();
-      }, [willHash, unhash]);
+        if (willHash) unhash(params || pathname);
+        else if (!!query) {
+          navUser(query);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [willHash]);
     };
   }
 }
