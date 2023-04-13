@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 import Text from "./core/Text";
 import Icon from "./core/Icon";
 import { RouterHooks } from "../router";
+import UsersContext from "./users/Context";
 
 const GIT_URL = "https://github.com/Gaushao/gh-users";
 const JEST_URL = "https://gaushao.github.io/gh-users/coverage";
@@ -11,13 +12,15 @@ const applicationDisplayName: "applicationDisplayName" =
   "applicationDisplayName";
 
 function PageHeader() {
-  const nav = RouterHooks.useNavToHome();
   const { isHome } = RouterHooks.useHashRouter();
+  const {
+    user: [, setUser],
+  } = UsersContext.useContext();
   return (
     <div className="flex justify-between items-center m-1">
       <div className="flex items-center">
         <div
-          onClick={nav}
+          onClick={() => setUser(null)}
           className={`rounded-lg border-2 p-1 border-black ${
             isHome ? "hover:bg-sky-300" : "hover:bg-rose-300 "
           } cursor-pointer`}

@@ -1,9 +1,17 @@
 import UsersContext from "./Context";
 import Text from "../core/Text";
 import Icon from "../core/Icon";
+import { RouterHooks } from "../../router";
+import { useEffect } from "react";
 
 export default function UserDetails() {
-  const user = UsersContext.useUserByParam();
+  const {
+    user: [user],
+  } = UsersContext.useContext();
+  const nav = RouterHooks.useNavToHome();
+  useEffect(() => {
+    if (!user) nav();
+  }, [nav, user]);
   if (!user) return null;
   return (
     <div className="flex">

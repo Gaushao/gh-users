@@ -7,7 +7,7 @@ type Placeholder = "usernameInputPlaceholder";
 const placeholder: Placeholder = "usernameInputPlaceholder";
 
 export default function UserInput() {
-  const { query, setQuery, loading } = UsersContext.useUserState();
+  const { query, setQuery, loading } = UsersContext.useContext();
   return (
     <div className="flex">
       <Input
