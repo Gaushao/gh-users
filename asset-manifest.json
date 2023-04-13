@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/gh-users/static/css/main.f28280fc.css",
-    "main.js": "/gh-users/static/js/main.33fa2caa.js",
+    "main.js": "/gh-users/static/js/main.57013379.js",
     "static/media/jest.svg": "/gh-users/static/media/jest.05a8c0297f0f756e6d1cf54235cd2dbc.svg",
     "static/media/github-rounded-border.svg": "/gh-users/static/media/github-rounded-border.f233fbd3ef9b0880743a4795b5b33eb4.svg",
     "static/media/github-logo.svg": "/gh-users/static/media/github-logo.a24bcb0013d0bfa538dc82c3dfb505e8.svg",
@@ -9,10 +9,10 @@
     "static/media/docs.svg": "/gh-users/static/media/docs.7f28970eccc961e993da3e4ccf896c4a.svg",
     "index.html": "/gh-users/index.html",
     "main.f28280fc.css.map": "/gh-users/static/css/main.f28280fc.css.map",
-    "main.33fa2caa.js.map": "/gh-users/static/js/main.33fa2caa.js.map"
+    "main.57013379.js.map": "/gh-users/static/js/main.57013379.js.map"
   },
   "entrypoints": [
     "static/css/main.f28280fc.css",
-    "static/js/main.33fa2caa.js"
+    "static/js/main.57013379.js"
   ]
 }
